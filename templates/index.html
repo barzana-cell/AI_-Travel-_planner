@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Planner</title>
+    <title>AI_Travel_Planner</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1 style="color: #2563eb; text-transform: uppercase;">Travel Planner</h1>
-        
-        <form method="POST" id="travelForm">
+        <h1>🇮🇳 AI Travel Planner</h1>
+        <form method="POST" id="mainForm">
             <div class="form-group">
-                <label>Budget</label>
-                <input type="number" name="budget" placeholder="Enter amount" required>
+                <label>Budget (INR ₹):</label>
+                <input type="number" name="budget" placeholder="e.g. 30000" required>
             </div>
             
             <div class="form-group">
-                <label>Duration (Days)</label>
-                <input type="number" name="days" placeholder="Number of days" required>
+                <label>Duration (Days):</label>
+                <input type="number" name="days" placeholder="e.g. 5" required>
             </div>
-
+            
             <div class="form-group">
-                <label>Month of Travel</label>
-                <select name="month" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                <label>Month of Travel:</label>
+                <select name="month" required>
+                    <option value="" disabled selected>Select Month</option>
                     <option value="January">January</option>
                     <option value="February">February</option>
                     <option value="March">March</option>
@@ -39,32 +39,48 @@
                     <option value="December">December</option>
                 </select>
             </div>
-
+            
             <div class="form-group">
-                <label>Interests</label>
-                <input type="text" name="interests" placeholder="e.g. Adventure, Food, Relaxation">
+                <label>Interests:</label>
+                <textarea name="interests" placeholder="e.g. Beaches, Trains, Local Food, History"></textarea>
             </div>
-
-            <button type="submit" id="submitBtn">Generate Plan</button>
+            
+            <button type="submit" id="submitBtn">Generate Plan (Bus/Train/Flight/Car)</button>
         </form>
 
-        <div id="loader" style="display:none; text-align:center; margin-top:20px;">
-            <p>✈️ Planning your perfect getaway...</p>
-        </div>
-
         {% if recommendation %}
-        <div class="result-area">
-            <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h3>🗺️ Your Custom Itinerary</h3>
-                <div style="display: flex; gap: 5px;">
-                    <button onclick="printItinerary()" style="width: auto; padding: 8px 12px; background: #10b981; font-size: 14px;">🖨️ Print</button>
-                    <button onclick="saveAsImage()" style="width: auto; padding: 8px 12px; background: #f59e0b; font-size: 14px;">📸 Save Image</button>
-                </div>
+        <div id="resultBox">
+            <div id="printableArea">
+                <h2 style="color: #e67e22; border-bottom: 2px solid #eee; padding-bottom: 10px;">Your Itinerary</h2>
+                <div style="white-space: pre-wrap; line-height: 1.6;">{{ recommendation }}</div>
             </div>
-            <div id="printableArea" class="itinerary-text">{{ recommendation }}</div>
+            
+            <div class="action-btns">
+                <button class="btn-secondary" onclick="window.print()">Print PDF</button>
+                <button class="btn-secondary" onclick="downloadImage()">Save as PNG</button>
+            </div>
         </div>
         {% endif %}
     </div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script>
+        // Loading state
+        document.getElementById('mainForm').onsubmit = function() {
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = "Consulting AI Travel Agent...";
+        };
+
+        // PNG Download function
+        function downloadImage() {
+            const element = document.getElementById("printableArea");
+            html2canvas(element).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'My_Indian_Trip_Plan.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
 </body>
 </html>
