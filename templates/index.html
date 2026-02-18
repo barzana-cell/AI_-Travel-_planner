@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: #2563eb; text-transform: uppercase;">Travel Planner</h1>
+        
+        <form method="POST" id="travelForm">
+            <div class="form-group">
+                <label>Budget</label>
+                <input type="number" name="budget" placeholder="Enter amount" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Duration (Days)</label>
+                <input type="number" name="days" placeholder="Number of days" required>
+            </div>
+
+            <div class="form-group">
+                <label>Month of Travel</label>
+                <select name="month" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Interests</label>
+                <input type="text" name="interests" placeholder="e.g. Adventure, Food, Relaxation">
+            </div>
+
+            <button type="submit" id="submitBtn">Generate Plan</button>
+        </form>
+
+        <div id="loader" style="display:none; text-align:center; margin-top:20px;">
+            <p>✈️ Planning your perfect getaway...</p>
+        </div>
+
+        {% if recommendation %}
+        <div class="result-area">
+            <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3>🗺️ Your Custom Itinerary</h3>
+                <div style="display: flex; gap: 5px;">
+                    <button onclick="printItinerary()" style="width: auto; padding: 8px 12px; background: #10b981; font-size: 14px;">🖨️ Print</button>
+                    <button onclick="saveAsImage()" style="width: auto; padding: 8px 12px; background: #f59e0b; font-size: 14px;">📸 Save Image</button>
+                </div>
+            </div>
+            <div id="printableArea" class="itinerary-text">{{ recommendation }}</div>
+        </div>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
